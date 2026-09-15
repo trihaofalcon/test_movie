@@ -155,8 +155,6 @@ export default function Home() {
       ? popularMovies
       : popularTVShows;
 
-  console.log(totalPages);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-700 via-zinc-800 to-zinc-900">
       <Header>
