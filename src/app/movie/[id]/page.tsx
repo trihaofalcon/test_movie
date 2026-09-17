@@ -11,6 +11,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { useMovieStore } from '@/store/useMovieStore';
+import Image from 'next/image';
 
 export default function MovieDetailPage() {
   const params = useParams();
@@ -28,7 +29,7 @@ export default function MovieDetailPage() {
         const id = parseInt(params.id as string);
         const movieData = await tmdbService.getMovieDetails(id);
         setMovie(movieData);
-      } catch (err) {
+      } catch {
         setError('Failed to load movie details');
       } finally {
         setLoading(false);
@@ -88,7 +89,7 @@ export default function MovieDetailPage() {
         )}
         onClick={() => setShowFullBackdrop(!showFullBackdrop)}
       >
-        <img
+        <Image
           src={backdropUrl}
           alt={movie.title}
           className="h-full w-full object-cover object-top"
@@ -99,7 +100,7 @@ export default function MovieDetailPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col gap-8 md:flex-row">
           <div className="flex-shrink-0">
-            <img
+            <Image
               src={posterUrl}
               alt={movie.title}
               className="h-[500px] w-full rounded-lg object-cover shadow-xl"
@@ -134,7 +135,11 @@ export default function MovieDetailPage() {
                     stroke="currentColor"
                     className="w-4 h-4 text-blue-400"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
                   </svg>
                   <span>Add to List</span>
                 </Button>

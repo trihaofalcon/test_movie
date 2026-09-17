@@ -6,6 +6,7 @@ import { tmdbService } from '@/services/tmdb';
 import { Card } from '@/components/ui';
 import MovieCardDropdown from './MovieCardDropdown';
 import { useMovieStore } from '@/store/useMovieStore';
+import Image from 'next/image';
 
 interface MovieCardProps {
   item: MediaItem;
@@ -17,7 +18,8 @@ export default function MovieCard({ item }: MovieCardProps) {
   );
 
   const title = item?.title || item?.name || '';
-  const date = item && ('release_date' in item ? item.release_date : item.first_air_date);
+  const date =
+    item && ('release_date' in item ? item.release_date : item.first_air_date);
   const year = date ? new Date(date).getFullYear() : 'N/A';
   const imageUrl = tmdbService.getImageUrl(item?.poster_path);
 
@@ -25,7 +27,7 @@ export default function MovieCard({ item }: MovieCardProps) {
     <Link href={`/${item.media_type}/${item.id}`}>
       <Card hover className="group relative overflow-hidden">
         <div className="aspect-[2/3] overflow-hidden relative">
-          <img
+          <Image
             src={imageUrl}
             alt={title}
             className="h-full w-full object-cover transition-opacity group-hover:opacity-75"
@@ -53,7 +55,9 @@ export default function MovieCard({ item }: MovieCardProps) {
           <MovieCardDropdown item={item} />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 pointer-events-none">
-          <h3 className="mb-1 font-semibold text-white line-clamp-2">{title}</h3>
+          <h3 className="mb-1 font-semibold text-white line-clamp-2">
+            {title}
+          </h3>
           <div className="flex items-center justify-between text-sm text-zinc-300">
             <span>{year}</span>
             <div className="flex items-center gap-1">
@@ -66,4 +70,3 @@ export default function MovieCard({ item }: MovieCardProps) {
     </Link>
   );
 }
-

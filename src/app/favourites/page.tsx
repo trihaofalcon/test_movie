@@ -5,23 +5,16 @@ import MovieCard from '@/components/MovieCard';
 import { Button, Card } from '@/components/ui';
 import { favouriteToMediaItem } from '@/lib/media';
 import { useMovieStore } from '@/store/useMovieStore';
-import { FormEvent, useMemo, useState } from 'react';
-
-type FilterId = 'all' | 'ungrouped' | string;
+import { useMemo } from 'react';
 
 export default function FavouritesPage() {
   const favourites = useMovieStore((state) => state.favourites);
   const groups = useMovieStore((state) => state.groups);
-  const addGroup = useMovieStore((state) => state.addGroup);
-  const deleteGroup = useMovieStore((state) => state.deleteGroup);
-  const removeFavourite = useMovieStore((state) => state.removeFavourite);
   const removeFavouriteFromGroup = useMovieStore(
     (state) => state.removeFavouriteFromGroup
   );
 
-  const [selectedFilter, setSelectedFilter] = useState<FilterId>('all');
-  const [groupName, setGroupName] = useState('');
-  const [groupDescription, setGroupDescription] = useState('');
+  const selectedFilter = 'all';
 
   const groupedIds = useMemo(
     () => new Set(groups.flatMap((group) => group.favouriteIds)),
@@ -40,34 +33,6 @@ export default function FavouritesPage() {
       group.favouriteIds.includes(favourite.id)
     );
   }, [favourites, groups, groupedIds, selectedFilter]);
-
-  const handleCreateGroup = (event: FormEvent) => {
-    event.preventDefault();
-    const name = groupName.trim();
-    if (!name) return;
-
-    const group = addGroup({
-      name,
-      description: groupDescription.trim(),
-    });
-    setGroupName('');
-    setGroupDescription('');
-    setSelectedFilter(group.id);
-  };
-
-  const handleDeleteGroup = (groupId: string) => {
-    const group = groups.find((item) => item.id === groupId);
-    if (!group) return;
-    if (
-      !window.confirm(`Delete group "${group.name}"? Favourites will be kept.`)
-    )
-      return;
-
-    deleteGroup(groupId);
-    if (selectedFilter === groupId) {
-      setSelectedFilter('all');
-    }
-  };
 
   const selectedGroup = groups.find((group) => group.id === selectedFilter);
 
@@ -150,7 +115,6 @@ export default function FavouritesPage() {
           <div className="mb-6">
             <h1 className="text-3xl font-bold">
               {selectedFilter === 'all' && 'All favourites'}
-              {selectedFilter === 'ungrouped' && 'Ungrouped favourites'}
               {selectedGroup && selectedGroup.name}
             </h1>
             {selectedGroup?.description && (

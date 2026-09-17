@@ -3,12 +3,15 @@
 import { Button, Input, Modal } from '@/components/ui';
 import { tmdbService } from '@/services/tmdb';
 import { useMovieStore } from '@/store/useMovieStore';
+import Image from 'next/image';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function AddToListModal() {
   const activeItem = useMovieStore((state) => state.activeListModalItem);
-  const closeAddToListModal = useMovieStore((state) => state.closeAddToListModal);
+  const closeAddToListModal = useMovieStore(
+    (state) => state.closeAddToListModal
+  );
   const lists = useMovieStore((state) => state.lists);
   const createList = useMovieStore((state) => state.createList);
   const toggleItemInList = useMovieStore((state) => state.toggleItemInList);
@@ -22,7 +25,10 @@ export default function AddToListModal() {
 
   const title = activeItem.title || activeItem.name || 'Untitled';
   const posterUrl = tmdbService.getImageUrl(activeItem.poster_path);
-  const date = 'release_date' in activeItem ? activeItem.release_date : activeItem.first_air_date;
+  const date =
+    'release_date' in activeItem
+      ? activeItem.release_date
+      : activeItem.first_air_date;
   const year = date ? new Date(date).getFullYear() : null;
 
   const handleToggleList = (listId: string, listName: string) => {
@@ -43,7 +49,9 @@ export default function AddToListModal() {
     if (!trimmed) return;
 
     // Check if list with same name already exists
-    const existing = lists.find((l) => l.name.toLowerCase() === trimmed.toLowerCase());
+    const existing = lists.find(
+      (l) => l.name.toLowerCase() === trimmed.toLowerCase()
+    );
     if (existing) {
       toast.error(`A list named "${trimmed}" already exists.`);
       return;
@@ -79,13 +87,17 @@ export default function AddToListModal() {
               stroke="currentColor"
               strokeWidth={2}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
 
           <div className="flex items-center gap-3 pr-8">
             <div className="h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-zinc-800 border border-zinc-700/50">
-              <img
+              <Image
                 src={posterUrl}
                 alt={title}
                 className="h-full w-full object-cover"
@@ -95,7 +107,10 @@ export default function AddToListModal() {
               <span className="text-xs font-medium uppercase tracking-wider text-blue-400">
                 Add to List
               </span>
-              <h2 id="add-to-list-title" className="text-base font-bold text-white truncate">
+              <h2
+                id="add-to-list-title"
+                className="text-base font-bold text-white truncate"
+              >
                 {title}
               </h2>
               <div className="flex items-center gap-2 text-xs text-zinc-400 mt-0.5">
@@ -109,7 +124,9 @@ export default function AddToListModal() {
                 {activeItem.vote_average > 0 && (
                   <>
                     <span>•</span>
-                    <span className="text-yellow-400">★ {activeItem.vote_average.toFixed(1)}</span>
+                    <span className="text-yellow-400">
+                      ★ {activeItem.vote_average.toFixed(1)}
+                    </span>
                   </>
                 )}
               </div>
@@ -147,7 +164,11 @@ export default function AddToListModal() {
               stroke="currentColor"
               strokeWidth={2.5}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
             </svg>
             New list
           </button>
@@ -189,19 +210,25 @@ export default function AddToListModal() {
       ) : (
         <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
           {lists.map((list) => {
-            const isChecked = list.items.some((item) => item.id === activeItem.id);
+            const isChecked = list.items.some(
+              (item) => item.id === activeItem.id
+            );
             return (
               <label
                 key={list.id}
-                className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer select-none ${isChecked
-                  ? 'bg-blue-600/15 border-blue-500/50 text-white'
-                  : 'bg-zinc-800/60 border-zinc-700/50 text-zinc-300 hover:bg-zinc-800 hover:border-zinc-600'
-                  }`}
+                className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer select-none ${
+                  isChecked
+                    ? 'bg-blue-600/15 border-blue-500/50 text-white'
+                    : 'bg-zinc-800/60 border-zinc-700/50 text-zinc-300 hover:bg-zinc-800 hover:border-zinc-600'
+                }`}
               >
                 <div className="min-w-0 flex-1 pr-3">
-                  <div className="font-medium text-sm truncate">{list.name}</div>
+                  <div className="font-medium text-sm truncate">
+                    {list.name}
+                  </div>
                   <div className="text-xs text-zinc-400 mt-0.5">
-                    {list.items.length} {list.items.length === 1 ? 'item' : 'items'}
+                    {list.items.length}{' '}
+                    {list.items.length === 1 ? 'item' : 'items'}
                     {list.description ? ` • ${list.description}` : ''}
                   </div>
                 </div>
@@ -224,7 +251,9 @@ export default function AddToListModal() {
           className="rounded-xl border border-zinc-700/70 bg-zinc-800/60 p-3.5 space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-150"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-zinc-200">Create new list</span>
+            <span className="text-xs font-semibold text-zinc-200">
+              Create new list
+            </span>
             <button
               type="button"
               onClick={() => setShowCreateForm(false)}

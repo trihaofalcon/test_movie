@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useMovieStore } from '@/store/useMovieStore';
+import Image from 'next/image';
 
 export default function TVShowDetailPage() {
   const params = useParams();
@@ -27,7 +28,7 @@ export default function TVShowDetailPage() {
         const id = parseInt(params.id as string);
         const tvShowData = await tmdbService.getTVShowDetails(id);
         setTVShow(tvShowData);
-      } catch (err) {
+      } catch {
         setError('Failed to load TV show details');
       } finally {
         setLoading(false);
@@ -87,7 +88,7 @@ export default function TVShowDetailPage() {
         )}
         onClick={() => setShowFullBackdrop(!showFullBackdrop)}
       >
-        <img
+        <Image
           src={backdropUrl}
           alt={tvShow.name}
           className="h-full w-full object-cover object-top"
@@ -98,7 +99,7 @@ export default function TVShowDetailPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col gap-8 md:flex-row">
           <div className="flex-shrink-0">
-            <img
+            <Image
               src={posterUrl}
               alt={tvShow.name}
               className="h-[500px] w-full rounded-lg object-cover shadow-xl"
@@ -133,7 +134,11 @@ export default function TVShowDetailPage() {
                     stroke="currentColor"
                     className="w-4 h-4 text-blue-400"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
                   </svg>
                   <span>Add to List</span>
                 </Button>

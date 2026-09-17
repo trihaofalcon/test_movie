@@ -67,7 +67,6 @@ export default function MovieCardDropdown({ item }: MovieCardDropdownProps) {
       removeFavourite(item.id);
       toast.info(`Removed "${title}" from favourites`);
     } else {
-      const date = 'release_date' in item ? item.release_date : item.first_air_date;
       const favourite: Favourite = {
         id: item.id,
         media_type: item.media_type,
@@ -75,8 +74,9 @@ export default function MovieCardDropdown({ item }: MovieCardDropdownProps) {
         poster_path: item.poster_path,
         backdrop_path: item.backdrop_path,
         vote_average: item.vote_average,
-        release_date: 'release_date' in item ? (item.release_date || '') : '',
-        first_air_date: 'first_air_date' in item ? (item.first_air_date || '') : '',
+        release_date: 'release_date' in item ? item.release_date || '' : '',
+        first_air_date:
+          'first_air_date' in item ? item.first_air_date || '' : '',
         addedAt: new Date().toISOString(),
       };
       addFavourite(favourite);

@@ -1,7 +1,9 @@
 import { MEDIA_TYPES } from '@/constants/common';
 import { Favourite, MediaItem, MovieListItem } from '@/types/movie';
 
-export function getMediaTitle(item: Favourite | MediaItem | MovieListItem): string {
+export function getMediaTitle(
+  item: Favourite | MediaItem | MovieListItem
+): string {
   if ('name' in item && item.name) return item.name;
   if ('title' in item && item.title) return item.title;
   return 'Untitled';
@@ -37,7 +39,6 @@ export function favouriteToMediaItem(favourite: Favourite): MediaItem {
 
 export function mediaItemToListItem(item: MediaItem): MovieListItem {
   const title = getMediaTitle(item);
-  const date = 'release_date' in item ? item.release_date : item.first_air_date;
   return {
     id: item.id,
     media_type: item.media_type,
@@ -76,4 +77,3 @@ export function listItemToMediaItem(item: MovieListItem): MediaItem {
     media_type: MEDIA_TYPES.TV,
   };
 }
-

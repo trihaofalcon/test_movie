@@ -13,7 +13,6 @@ import {
   TMDBResponse,
   TVShow,
 } from '@/types/movie';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 function normalizeSearchResults(data: TMDBResponse<MediaItem>): MediaItem[] {
@@ -91,7 +90,7 @@ export default function Home() {
           }));
           setPopularTVShows(showsWithMediaType, data.total_pages);
         }
-      } catch (err) {
+      } catch {
         setError('Failed to fetch data');
       }
     };
@@ -116,7 +115,7 @@ export default function Home() {
       const data = await tmdbService.searchMulti(query, page);
       setSearchResults(normalizeSearchResults(data), data.total_pages);
       setCurrentPage(page);
-    } catch (err) {
+    } catch {
       setError('Search failed');
     }
   };

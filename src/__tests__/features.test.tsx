@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom';
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { useMovieStore } from '@/store/useMovieStore';
-import { storageService } from '@/services/storage';
 import { MediaItem, Favourite } from '@/types/movie';
 import Header from '@/components/Header';
 import FavouriteButton from '@/components/FavouriteButton';
@@ -70,7 +69,11 @@ describe('Header component', () => {
 
   beforeEach(() => {
     localStorage.clear();
-    useMovieStore.setState({ favourites: [], lists: [], activeListModalItem: null });
+    useMovieStore.setState({
+      favourites: [],
+      lists: [],
+      activeListModalItem: null,
+    });
     usePathname.mockReturnValue('/');
   });
 
@@ -83,15 +86,37 @@ describe('Header component', () => {
 
   it('renders Favourites and Lists nav links', () => {
     render(<Header />);
-    expect(screen.getByRole('link', { name: /favourites/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /favourites/i })
+    ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /lists/i })).toBeInTheDocument();
   });
 
   it('shows count badge when there are favourites', () => {
     useMovieStore.setState({
       favourites: [
-        { id: 1, name: 'Movie A', media_type: 'movie', poster_path: '', backdrop_path: '', vote_average: 7, release_date: '', first_air_date: '', addedAt: '' },
-        { id: 2, name: 'Movie B', media_type: 'movie', poster_path: '', backdrop_path: '', vote_average: 8, release_date: '', first_air_date: '', addedAt: '' },
+        {
+          id: 1,
+          name: 'Movie A',
+          media_type: 'movie',
+          poster_path: '',
+          backdrop_path: '',
+          vote_average: 7,
+          release_date: '',
+          first_air_date: '',
+          addedAt: '',
+        },
+        {
+          id: 2,
+          name: 'Movie B',
+          media_type: 'movie',
+          poster_path: '',
+          backdrop_path: '',
+          vote_average: 8,
+          release_date: '',
+          first_air_date: '',
+          addedAt: '',
+        },
       ],
     });
     render(<Header />);
@@ -127,7 +152,11 @@ describe('Header component', () => {
 describe('FavouriteButton component', () => {
   beforeEach(() => {
     localStorage.clear();
-    useMovieStore.setState({ favourites: [], lists: [], activeListModalItem: null });
+    useMovieStore.setState({
+      favourites: [],
+      lists: [],
+      activeListModalItem: null,
+    });
   });
 
   const defaultProps = {
@@ -148,7 +177,9 @@ describe('FavouriteButton component', () => {
   it('adds to favourites when clicked', () => {
     render(<FavouriteButton {...defaultProps} />);
     fireEvent.click(screen.getByLabelText('Add to favourites'));
-    expect(useMovieStore.getState().favourites.some((f) => f.id === mockMovie.id)).toBe(true);
+    expect(
+      useMovieStore.getState().favourites.some((f) => f.id === mockMovie.id)
+    ).toBe(true);
   });
 
   it('shows "Remove from favourites" label after being favourited', () => {
@@ -202,7 +233,11 @@ describe('FavouriteButton component', () => {
 describe('MovieCard component', () => {
   beforeEach(() => {
     localStorage.clear();
-    useMovieStore.setState({ favourites: [], lists: [], activeListModalItem: null });
+    useMovieStore.setState({
+      favourites: [],
+      lists: [],
+      activeListModalItem: null,
+    });
   });
 
   it('renders movie title and year', () => {
@@ -284,7 +319,9 @@ describe('Input UI component', () => {
   it('fires onChange handler', () => {
     const onChange = jest.fn();
     render(<Input placeholder="type here" onChange={onChange} />);
-    fireEvent.change(screen.getByPlaceholderText('type here'), { target: { value: 'hello' } });
+    fireEvent.change(screen.getByPlaceholderText('type here'), {
+      target: { value: 'hello' },
+    });
     expect(onChange).toHaveBeenCalledTimes(1);
   });
 });
@@ -368,35 +405,57 @@ describe('useMovieStore – search & pagination', () => {
 describe('useMovieStore – Groups', () => {
   beforeEach(() => {
     localStorage.clear();
-    useMovieStore.setState({ favourites: [], groups: [], lists: [], activeListModalItem: null });
+    useMovieStore.setState({
+      favourites: [],
+      groups: [],
+      lists: [],
+      activeListModalItem: null,
+    });
   });
 
   it('creates and stores a group', () => {
-    const group = useMovieStore.getState().addGroup({ name: 'Horror', description: 'Scary stuff' });
+    const group = useMovieStore
+      .getState()
+      .addGroup({ name: 'Horror', description: 'Scary stuff' });
     expect(group.name).toBe('Horror');
     expect(useMovieStore.getState().groups).toHaveLength(1);
   });
 
   it('updates a group name via the store', () => {
-    const group = useMovieStore.getState().addGroup({ name: 'Old', description: '' });
+    const group = useMovieStore
+      .getState()
+      .addGroup({ name: 'Old', description: '' });
     useMovieStore.getState().updateGroup(group.id, { name: 'New' });
-    const updated = useMovieStore.getState().groups.find((g) => g.id === group.id);
+    const updated = useMovieStore
+      .getState()
+      .groups.find((g) => g.id === group.id);
     expect(updated?.name).toBe('New');
   });
 
   it('deletes a group via the store', () => {
-    const group = useMovieStore.getState().addGroup({ name: 'Temp', description: '' });
+    const group = useMovieStore
+      .getState()
+      .addGroup({ name: 'Temp', description: '' });
     useMovieStore.getState().deleteGroup(group.id);
     expect(useMovieStore.getState().groups).toHaveLength(0);
   });
 
   it('adds and removes a favourite to/from a group', () => {
     const fav: Favourite = {
-      id: 42, media_type: 'movie', name: 'Matrix', poster_path: '', backdrop_path: '',
-      vote_average: 8, release_date: '', first_air_date: '', addedAt: '',
+      id: 42,
+      media_type: 'movie',
+      name: 'Matrix',
+      poster_path: '',
+      backdrop_path: '',
+      vote_average: 8,
+      release_date: '',
+      first_air_date: '',
+      addedAt: '',
     };
     useMovieStore.getState().addFavourite(fav);
-    const group = useMovieStore.getState().addGroup({ name: 'Sci-Fi', description: '' });
+    const group = useMovieStore
+      .getState()
+      .addGroup({ name: 'Sci-Fi', description: '' });
 
     useMovieStore.getState().addFavouriteToGroup(group.id, 42);
     expect(useMovieStore.getState().groups[0].favouriteIds).toContain(42);
@@ -407,8 +466,12 @@ describe('useMovieStore – Groups', () => {
 
   it('updateList changes list name and description', () => {
     const list = useMovieStore.getState().createList('Initial', 'Desc');
-    useMovieStore.getState().updateList(list.id, { name: 'Updated', description: 'New Desc' });
-    const updated = useMovieStore.getState().lists.find((l) => l.id === list.id);
+    useMovieStore
+      .getState()
+      .updateList(list.id, { name: 'Updated', description: 'New Desc' });
+    const updated = useMovieStore
+      .getState()
+      .lists.find((l) => l.id === list.id);
     expect(updated?.name).toBe('Updated');
     expect(updated?.description).toBe('New Desc');
   });
